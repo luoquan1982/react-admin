@@ -4,15 +4,26 @@
  * 函数的返回值是promise对象
  */
 
-import axios from 'axios';
+import axios from "axios";
 import {message} from 'antd';
 
 export default function ajax(url, data = {}, type = 'GET') {
-    if ('GET' === type) {
-        return axios.get(url, {
-            params: data
+
+    let promise;
+    return new Promise((resolve, reject) => {
+        if ('GET' === type) {
+            promise = axios.get(url, {
+                params: data
+            });
+        } else {
+            promise = axios.post(url, data);
+        }
+
+        promise.then((response) => {
+            resolve(response);
+        }).catch(error => {
+            message.error(error);
         });
-    } else {
-        return axios.post(url, data);
-    }
+    });
+
 }

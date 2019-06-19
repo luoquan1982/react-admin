@@ -2,34 +2,32 @@
  * Created by LuoQuan on 2019/6/8.
  */
 
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {
-    Form,
-    Icon,
-    Input,
-    Button
-} from 'antd';
+import React, {Component} from "react";
+import {Button, Form, Icon, Input, message} from "antd";
 
-import './login.less';
-import logo from './images/logo.png';
-import {reqLogin} from '../../api';
+import "./login.less";
+import logo from "./images/logo.png";
+import {reqLogin} from "../../api";
 
 const Item = Form.Item;  //不能写在import之前
 
 class Login extends Component {
     handleSubmit = (event) => {
         //对所有的表单字段进行验证
-        this.props.form.validateFields((err, values) => {
+        this.props.form.validateFields(async(err, values) => {
             //校验成功
             const {username, password} = values;
             if (!err) {
                 //请求登录
-                reqLogin(username, password).then(response => {
-                    console.log('成功了', response.data);
-                }).catch(error => {
-                    console.log(error);
-                })
+                const response = await reqLogin(username,password);
+                const result = response.data;
+                if(200 === result.status){
+                    message.success('登录成功了');
+                    const user = result.data;
+                    this.props.history.replace('/');
+                }else{
+                    message.error(result.msg);
+                }
             } else {
                 console.log('校验失败');
             }
