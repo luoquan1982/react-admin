@@ -3,11 +3,14 @@
  */
 
 import React, {Component} from "react";
+import {Redirect} from 'react-router-dom';
 import {Button, Form, Icon, Input, message} from "antd";
 
 import "./login.less";
 import logo from "./images/logo.png";
 import {reqLogin} from "../../api";
+import memoryUtils from "../../utils/memoryUtils";
+import store from '../../utils/storageUtils';
 
 const Item = Form.Item;  //不能写在import之前
 
@@ -24,6 +27,9 @@ class Login extends Component {
                 if(200 === result.status){
                     message.success('登录成功了');
                     const user = result.data;
+                    memoryUtils.user = user;
+                    store.saveUser(user);
+
                     this.props.history.replace('/');
                 }else{
                     message.error(result.msg);
@@ -53,6 +59,11 @@ class Login extends Component {
     };
 
     render() {
+        //如果用户已经登录,则自动跳转到主页
+        const user = memoryUtils.user;
+        if(user && user.id){
+            return <Redirect to='/' />;
+        }
         const {form} = this.props;
         const {getFieldDecorator} = form;
         return (
