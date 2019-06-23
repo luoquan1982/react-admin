@@ -7,7 +7,7 @@ import {Redirect} from 'react-router-dom';
 import {Button, Form, Icon, Input, message} from "antd";
 
 import "./login.less";
-import logo from "./images/logo.png";
+import logo from "../../assets/images/logo.png";
 import {reqLogin} from "../../api";
 import memoryUtils from "../../utils/memoryUtils";
 import store from '../../utils/storageUtils';
