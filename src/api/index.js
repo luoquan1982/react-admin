@@ -28,9 +28,9 @@ export const reqCategories = (parentId) => ajax('/manage/category/list', {parent
 /*
  添加分类
  */
-export const reqAddCategory = (categoryName, ParentId) => ajax('/manage/category/add', {
-    categoryName,
-    ParentId
+export const reqAddCategory = (name, parentId) => ajax('/manage/category/add', {
+    name,
+    parentId
 }, 'POST');
 
 /*
