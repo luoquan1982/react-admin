@@ -3,12 +3,22 @@
  * 商品路由
  */
 
-import React from 'react';
+import React, {Component} from 'react';
+import {Switch,Route,Redirect} from 'react-router-dom';
 
-export default class Product extends React.Component {
+import ProductHome from './home';
+import ProductAddUpdate from './add-update';
+import ProductDetail from './detail';
+
+export default class Product extends Component {
     render() {
         return (
-            <div>Product</div>
+            <Switch>
+                <Route path='/product' component={ProductHome} exact/>
+                <Route path='/product/addupdate' component={ProductAddUpdate} exact/>
+                <Route path='/product/detail' component={ProductDetail} exact/>
+                <Redirect to='/product'/>{/*其余路由都默认重定向到商品主页面*/}
+            </Switch>
         )
     }
 }
