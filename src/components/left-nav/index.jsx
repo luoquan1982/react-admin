@@ -34,9 +34,9 @@ class LeftNav extends Component {
                 ))
             } else {
                 //查找当前menu下有没有子item被选中,如果有,则刷新的时候需要展开此menu
-                const cItem = item.children.find(cItem => cItem.key === path);
-                if(cItem)
-                this.openKey = item.key;
+                const cItem = item.children.find(cItem => 0 === path.indexOf(cItem.key));
+                if (cItem)
+                    this.openKey = item.key;
                 accumulate.push((
                     <SubMenu key={item.key}
                              title={
@@ -57,7 +57,11 @@ class LeftNav extends Component {
     render() {
         const {menu} = this;
         //得到当前请求的路由路径
-        const path = this.props.location.pathname;
+        let path = this.props.location.pathname;
+        //处理path,为了匹配三层路由的情况
+        if (0 === path.indexOf('/product')) {
+            path = '/product';
+        }
         const openKey = this.openKey;
         return (
             <div>

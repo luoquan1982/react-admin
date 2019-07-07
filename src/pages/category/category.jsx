@@ -76,8 +76,8 @@ export default class Category extends Component {
         const response = await reqCategories(parentId);
         this.setState({loading: false});
         if (response.status === 200) {
-            const {data} = response.data;
-            '0' === parentId ? this.setState({categories: data}) : this.setState({subCategories: data});
+            const list = response.data.list;
+            '0' === parentId ? this.setState({categories: list}) : this.setState({subCategories: list});
         } else {
             message.error('获取列表数据失败');
         }

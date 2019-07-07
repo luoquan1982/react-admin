@@ -21,7 +21,7 @@ export const reqLogin = (username, password) => ajax('/login', {username, passwo
 export const reqAddUser = (user) => ajax('/manage/user/add', user, 'POST');
 
 /*
- 查询分类
+ 查询分类(前端分页)
  */
 export const reqCategories = (parentId) => ajax('/manage/category/list', {parentId});
 
@@ -40,6 +40,31 @@ export const reqUpdateCategory = (categoryId, categoryName) => ajax('/manage/cat
     categoryId,
     categoryName
 }, 'POST');
+
+/*
+ 获取分类名称(根据分类id)
+ */
+export const reqCategoryName = (categoryId) => ajax('/manage/category/categoryName', {categoryId});
+
+/*
+ 更新商品的状态(上架|下架)
+ */
+export const reqUpdateStatus = (productId, status) => ajax('/manage/product/updateStatus', {productId, status}, 'POST');
+
+/*
+ 获取商品分页列表(后端分页)
+ */
+export const reqProductsByPage = (page, pageSize) => ajax('/manage/product/list', {page, pageSize});
+
+/*
+ 搜索商品分页列表 searchType:搜索类型,productName,productDesc
+ */
+export const reqSearchProduct = ({page, pageSize, searchName, searchType}) => ajax('/manage/product/search', {
+    page,
+    pageSize,
+    [searchType]: searchName
+});
+
 
 /*
  jsonp接口请求函数,查询天气
