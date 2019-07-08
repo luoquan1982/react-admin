@@ -6,21 +6,10 @@ import React, {Component} from 'react';
 import {Card, Form, Input, Cascader, Upload, Button, Icon} from 'antd';
 
 import LinkButton from '../../components/link-button';
+import {reqCategories} from '../../api';
 
 const Item = Form.Item;
 const TextArea = Input.TextArea;
-
-const options = [
-    {
-        value: 'zhejiang',
-        label: 'Zhejiang',
-        isLeaf: false,
-    }, {
-        value: 'jiangsu',
-        label: 'Jiangsu',
-        isLeaf: false,
-    }
-];
 
 /*
  Product的添加修改路由组件
@@ -28,35 +17,56 @@ const options = [
 class ProductAddUpdate extends Component {
 
     state = {
-        options: options
+        options: []
+    }
+
+    /*
+     异步获取一/二级分类列表,并显示
+     */
+    getCategories = async (parentId) => {
+        const response = await reqCategories(parentId);
+        if (200 === response.status) {
+            const categories = response.data.list;
+            if ('0' === parentId) {
+                this.updateOptions(categories);
+            } else {
+                return categories;
+            }
+        }
+    }
+
+    updateOptions = (categories) => {
+        const options = categories.map((item) => ({
+            value: item.id,
+            label: item.name,
+            isLeaf: false
+        }))
+        this.setState({options});
     }
 
     /*
      加载下一级列表的回调函数
      */
-    loadData = selectedOptions => {
+    loadData = async selectedOptions => {
         const targetOption = selectedOptions[0];
         targetOption.loading = true;
 
-        // load options lazily
-        setTimeout(() => {
-            targetOption.loading = false;
-            targetOption.children = [
-                {
-                    label: `${targetOption.label} Dynamic 1`,
-                    value: 'dynamic1',
-                    isLeaf: true
-                },
-                {
-                    label: `${targetOption.label} Dynamic 2`,
-                    value: 'dynamic2',
-                    isLeaf: true
-                },
-            ];
-            this.setState({
-                options: [...this.state.options], //最好以这种结构的方式书写
-            });
-        }, 1000);
+        //根据选择的分类,获取下级分类(二级)
+        const subCategories = await this.getCategories(targetOption.value);
+        console.log(subCategories);
+        targetOption.loading = false;
+        if (subCategories && subCategories.length > 0) {
+            const subOptions = subCategories.map((item) => ({
+                value: item.id,
+                label: item.name,
+                isLeaf: true
+            }));
+            targetOption.children = subOptions;
+        } else {
+            //当前选中的分类没有二级分类,此时将标志位isLeaf的字段置了true
+            targetOption.isLeaf = true;
+        }
+        this.setState({options:[...this.state.options]})
     };
 
     submit = () => {
@@ -77,6 +87,10 @@ class ProductAddUpdate extends Component {
         } else {
             callback('价格必须大于0')     //验证未通过
         }
+    }
+
+    componentDidMount() {
+        this.getCategories('0');
     }
 
     render() {
