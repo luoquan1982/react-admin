@@ -44,7 +44,7 @@ class ProductAddUpdate extends Component {
 
         //如果是一个二级分类商品的更新
         const {isUpdate, product} = this;
-        const {paCategoryId, categoryId} = product;
+        const {paCategoryId} = product;
         if (isUpdate && '0' !== paCategoryId) {
             //获取对应的二级分类列表
             const subCategories = await this.getCategories(paCategoryId);
