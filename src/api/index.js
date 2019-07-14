@@ -65,6 +65,11 @@ export const reqSearchProduct = ({page, pageSize, searchName, searchType}) => aj
     [searchType]: searchName
 });
 
+/*
+ 删除图片
+ */
+export const reqDeleteImg = (url) => ajax('/manage/image/delete', {url}, 'POST');
+
 
 /*
  jsonp接口请求函数,查询天气

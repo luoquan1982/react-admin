@@ -3,8 +3,9 @@
  */
 
 import React, {Component} from 'react';
-import {Card, Form, Input, Cascader, Upload, Button, Icon} from 'antd';
+import {Card, Form, Input, Cascader, Button, Icon,message} from 'antd';
 
+import PicturesWall from './pictures-wall';
 import LinkButton from '../../components/link-button';
 import {reqCategories} from '../../api';
 
@@ -18,6 +19,12 @@ class ProductAddUpdate extends Component {
 
     state = {
         options: []
+    }
+
+    constructor(props) {
+        super(props);
+        //创建用来保存ref标识的标签对象的容器
+        this.pw = React.createRef();
     }
 
     /*
@@ -55,7 +62,7 @@ class ProductAddUpdate extends Component {
                 isLeaf: true
             }));
             //找到当前商品对应的一级option对象
-            const targetOption = options.find(option=>option.value === paCategoryId)
+            const targetOption = options.find(option => option.value === paCategoryId)
             //关联到对应的一级option上
             targetOption.children = subOptions;
         }
@@ -92,6 +99,8 @@ class ProductAddUpdate extends Component {
         this.props.form.validateFields((error, values) => {
             if (!error) {
                 console.log(values);
+                const imgs = this.pw.current.getImgs();
+                message.info(JSON.stringify(imgs));
                 alert('发送ajax请求');
             }
         })
@@ -196,7 +205,7 @@ class ProductAddUpdate extends Component {
                         }
                     </Item>
                     <Item label='商品图片'>
-                        <div>商品图片</div>
+                        <PicturesWall ref={this.pw}/>
                     </Item>
                     <Item label='商品详情'>
                         <div>商品详情</div>
